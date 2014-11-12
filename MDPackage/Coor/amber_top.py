@@ -21,30 +21,56 @@ def Read_top(filename):
         sys.exit()
     all_lines=fp.readlines()
     fp.close()
-    find_resi_label=False
-    find_resi_point=False
-    find_atom_name=False
-    residue_label=[]
-    residue_pointer=[]
-    atom_name=[]
+    find_resi_label =False
+    find_resi_point =False
+    find_atom_name  =False
+    find_charge     = False
+    find_mass       = False
+
+    atom_charge     = list()
+    residue_label   =[]
+    residue_pointer =[]
+    atom_name       =[]
+    atom_mass       = list()
+
     for line in all_lines:
         if "%FLAG" in line:
             if "RESIDUE_LABEL" in line:
-                find_resi_label=True
-                find_resi_point=False
-                find_atom_name=False
+                find_resi_label =True
+                find_resi_point =False
+                find_atom_name  =False
+                find_charge     = False
+                find_mass = False
             elif "RESIDUE_POINTER" in line:
-                find_resi_point=True
-                find_resi_label=False
-                find_atom_name=False
+                find_resi_point =True
+                find_resi_label =False
+                find_atom_name  =False
+                find_charge     = False
+                find_mass = False
             elif "ATOM_NAME" in line:
-                find_atom_name=True
-                find_resi_label=False
-                find_resi_point=False
+                find_atom_name  =True
+                find_resi_label =False
+                find_resi_point =False
+                find_charge     = False
+                find_mass       = False
+            elif "CHARGE" in line:
+                find_atom_name  = False
+                find_resi_label = False
+                find_resi_point = False
+                find_charge     = True
+                find_mass       = False
+            elif "MASS" in line:
+                find_atom_name  = False
+                find_resi_label = False
+                find_resi_point = False
+                find_charge     = False
+                find_mass       = True
             else:
-                find_resi_label=False
-                find_resi_point=False
-                find_atom_name=False
+                find_resi_label =False
+                find_resi_point =False
+                find_atom_name  =False
+                find_charge     = False
+                find_mass       = False
         else:
             if find_resi_label:
                 residue_label.append(line[:-1])
@@ -52,6 +78,14 @@ def Read_top(filename):
                 residue_pointer.append(line[:-1])
             elif find_atom_name:
                 atom_name.append(line[:-1])
+            elif find_charge:
+                items = line.split()
+                for item in items:
+                    atom_charge.append(float(item))
+            elif find_mass:
+                items = line.split()
+                for item in items:
+                    atom_mass.append(float(item))
             else:
                 pass
     residue_label=string.split(string.join(residue_label[1:]))
@@ -72,6 +106,8 @@ def Read_top(filename):
         atom_unit=unit_atom.unit_atom()
         atom_unit.atom_name=atom_name[i]
         atom_unit.atom_serial=(i+1)
+        atom_unit.charge = atom_charge[i]
+        atom_unit.mass = atom_mass[i]
 #        for j in range(len(residue_pointer)-1):
 #            if (i+1) > int(residue_pointer[j])-1 and (i+1) < int(residue_pointer[j+1]):
 #                atom_unit.residue_name=residue_label[j]
