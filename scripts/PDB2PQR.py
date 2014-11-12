@@ -3,6 +3,7 @@
 import sys
 import os
 import getopt
+from MDPackage import Coor
 
 def Checkargs():
     argc=len(sys.argv)
