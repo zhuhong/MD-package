@@ -230,11 +230,10 @@ def Save_file(filename,atom_list):
         for a in atom_list:
             fp.write(a.atom_2_GROformat()+"\n")
     elif filename.endswith(".pqr"):
-        if isinstance(atom_list[0],PQR.PQR):
-            for a in atom_list:
-                fp.write(a.atom_2_PQRformat()+"\n")
-        else:
-            print "Error:"
+        for a in atom_list:
+            fp.write(a.atom_2_PQRformat()+"\n")
+        # else:
+            # print "Error:"
     else:
         print "The coordinate file : %s is invilad, both *.gro and *.pdb are allowd." %filename
         return False

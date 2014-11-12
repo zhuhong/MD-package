@@ -16,7 +16,7 @@ class unit_atom():
     '''
     def __init__(self,atom_name="",atom_serial=1, atom_id =1, \
         residue_name="", residue_id = 1, residue_serial=1, \
-        atom_coor_x=0.0,atom_coor_y=0.0,atom_coor_z=0.0):
+        coor_x=0.0,coor_y=0.0,coor_z=0.0):
         self.atom_name      = atom_name
         self.atom_serial    = atom_serial
         self.atom_id        = atom_id  # this one is from 1.
@@ -27,7 +27,7 @@ class unit_atom():
         self.coor_y         = coor_y
         self.coor_z         = coor_z
         self.charge         = 0.0
-        self.mass           = 0.0
+        self.radius           = 0.0
 
     def atom_2_PDBformat(self):
         temp_atom=""
@@ -41,7 +41,7 @@ class unit_atom():
 
         s = "%s%5d %s %3s  %4d    %8.3f%8.3f%8.3f%6.2f%6.2f "  \
                   % ("ATOM".ljust(6) , self.atom_serial , temp_atom , self.residue_name.rjust(3) , \
-                  self.residue_serial , self.atom_coor_x*10 , self.atom_coor_y*10 , self.atom_coor_z*10,\
+                  self.residue_serial , self.coor_x*10 , self.coor_y*10 , self.coor_z*10,\
                   1.00,0.00)
         return s
 
@@ -55,10 +55,10 @@ class unit_atom():
             else:
                 temp_atom=self.atom_name
 
-        s = "%s%5d %s %3s  %4d    %8.3f%8.3f%8.3f%6.2f%6.2f "  \
+        s = "%s%5d %s %3s  %4d    %8.3f%8.3f%8.3f%8.4f%7.4f "  \
                   % ("ATOM".ljust(6) , self.atom_serial , temp_atom , self.residue_name.rjust(3) , \
-                  self.residue_serial , self.atom_coor_x*10 , self.atom_coor_y*10 , self.atom_coor_z*10,\
-                  self.charge,self.mass)
+                  self.residue_serial , self.coor_x*10 , self.coor_y*10 , self.coor_z*10,\
+                  self.charge,self.radius)
         return s        
 
     def atom_2_GROformat(self):

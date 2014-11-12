@@ -12,22 +12,23 @@ except ImportError:
 
 
 
-try:
-    import MDAnalysis
-except ImportError:
-    print "*** package 'MDAnalysis' not found ***"
-    sys.exit(-1)
+#try:
+#    import MDAnalysis
+#except ImportError:
+#    print "*** package 'MDAnalysis' not found ***"
+#    sys.exit(-1)
 
 
 setup(
         name='MDPackage',
         version='0.1.0',
         author="zhuh",
-        packages=['MDPackage','MDPackage.data_analysis','MDPackage.mymath','MDPackage.Coor'],
-        scripts=['scripts/Trjconv.py','scripts/pRDF_test.py'\
-                ,'scripts/Modify_Coor.py','scripts/entropy4gmx.py'\
-                ,'scripts/Trj_info.py','scripts/Trj_modify.py','scripts/PDB_2_xtc.py','scripts/Hbond_occ.py'\
-                ,'scripts/amber2xtc.py','scripts/LES_2_dcd.py','scripts/Read_Ambout.py'\
-                ,'scripts/amber2dcd.py','scripts/Rotate_2_Z.py','scripts/PW-rmsd.py']
+#        packages=['MDPackage','MDPackage.data_analysis','MDPackage.mymath','MDPackage.Coor'],
+        packages=['MDPackage','MDPackage.Coor'],
+#        scripts=['scripts/Trjconv.py','scripts/pRDF_test.py'\
+#                ,'scripts/Modify_Coor.py','scripts/entropy4gmx.py'\
+#                ,'scripts/Trj_info.py','scripts/Trj_modify.py','scripts/PDB_2_xtc.py','scripts/Hbond_occ.py'\
+#                ,'scripts/amber2xtc.py','scripts/LES_2_dcd.py','scripts/Read_Ambout.py'\
+#                ,'scripts/amber2dcd.py','scripts/Rotate_2_Z.py','scripts/PW-rmsd.py']
         )
 

@@ -25,52 +25,54 @@ def Read_top(filename):
     find_resi_point =False
     find_atom_name  =False
     find_charge     = False
-    find_mass       = False
+    find_radius       = False
 
     atom_charge     = list()
     residue_label   =[]
     residue_pointer =[]
     atom_name       =[]
-    atom_mass       = list()
+    atom_radius       = list()
 
     for line in all_lines:
+        if "%FORMAT" in line:
+            continue
         if "%FLAG" in line:
             if "RESIDUE_LABEL" in line:
                 find_resi_label =True
                 find_resi_point =False
                 find_atom_name  =False
                 find_charge     = False
-                find_mass = False
+                find_radius = False
             elif "RESIDUE_POINTER" in line:
                 find_resi_point =True
                 find_resi_label =False
                 find_atom_name  =False
                 find_charge     = False
-                find_mass = False
+                find_radius = False
             elif "ATOM_NAME" in line:
                 find_atom_name  =True
                 find_resi_label =False
                 find_resi_point =False
                 find_charge     = False
-                find_mass       = False
+                find_radius     = False
             elif "CHARGE" in line:
                 find_atom_name  = False
                 find_resi_label = False
                 find_resi_point = False
                 find_charge     = True
-                find_mass       = False
-            elif "MASS" in line:
+                find_radius     = False
+            elif "RADII" in line:
                 find_atom_name  = False
                 find_resi_label = False
                 find_resi_point = False
                 find_charge     = False
-                find_mass       = True
+                find_radius     = True
             else:
                 find_resi_label =False
                 find_resi_point =False
                 find_atom_name  =False
                 find_charge     = False
-                find_mass       = False
+                find_radius       = False
         else:
             if find_resi_label:
                 residue_label.append(line[:-1])
@@ -81,18 +83,18 @@ def Read_top(filename):
             elif find_charge:
                 items = line.split()
                 for item in items:
-                    atom_charge.append(float(item))
-            elif find_mass:
+                    atom_charge.append(float(item)/18.2223)
+            elif find_radius:
                 items = line.split()
                 for item in items:
-                    atom_mass.append(float(item))
+                    atom_radius.append(float(item))
             else:
                 pass
-    residue_label=string.split(string.join(residue_label[1:]))
-    residue_pointer=string.split(string.join(residue_pointer[1:]))
+    residue_label=string.split(string.join(residue_label))
+    residue_pointer=string.split(string.join(residue_pointer))
 
     atom=[]
-    for name in atom_name[1:]:
+    for name in atom_name:
         for i in range(len(name)/4):
             atom.append(string.strip(name[4*i:4*i+4]))
 
@@ -100,6 +102,9 @@ def Read_top(filename):
 
     result_list=[]
 
+    print atom_name
+    print len(atom_name)
+    print residue_label
 
     temp_num=0
     for i in range(len(atom_name)):
@@ -107,7 +112,7 @@ def Read_top(filename):
         atom_unit.atom_name=atom_name[i]
         atom_unit.atom_serial=(i+1)
         atom_unit.charge = atom_charge[i]
-        atom_unit.mass = atom_mass[i]
+        atom_unit.radius = atom_radius[i]
 #        for j in range(len(residue_pointer)-1):
 #            if (i+1) > int(residue_pointer[j])-1 and (i+1) < int(residue_pointer[j+1]):
 #                atom_unit.residue_name=residue_label[j]
@@ -136,6 +141,7 @@ def Read_top(filename):
 #        else:
 
         result_list.append(atom_unit)
+        print atom_unit.atom_2_PQRformat()
     
     return result_list
     
@@ -157,12 +163,14 @@ def Read_crd(top_file, crd_file):
     if number_line != len(atom_list):
         print "Error: the atom number in top file not equal the crd file."
         sys.exit(1)
-    coor=all_lines[2:-1]
-    for i in range(number_line):
+    coor=all_lines[2:]
+    for i,atom in enumerate(atom_list):
         j=i%2
-        atom_list[i].atom_coor_x=float(string.strip(coor[i/2][36*j   :36*j+12]))/10
-        atom_list[i].atom_coor_y=float(string.strip(coor[i/2][36*j+12:36*j+24]))/10
-        atom_list[i].atom_coor_z=float(string.strip(coor[i/2][36*j+24:36*j+36]))/10
+        # print coor
+        # print len(coor)
+        atom_list[i].coor_x=float(string.strip(coor[i/2][36*j   :36*j+12]))/10
+        atom_list[i].coor_y=float(string.strip(coor[i/2][36*j+12:36*j+24]))/10
+        atom_list[i].coor_z=float(string.strip(coor[i/2][36*j+24:36*j+36]))/10
 
     return atom_list
 
